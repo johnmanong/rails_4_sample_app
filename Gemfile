@@ -1,6 +1,5 @@
 # this gemfile is hijacked from railstutorial.org, listing 9.48
 
-
 source 'https://rubygems.org'
 ruby '2.0.0'
 
@@ -11,15 +10,16 @@ gem 'bcrypt-ruby', '3.0.1'
 gem 'faker', '1.1.2'
 gem 'will_paginate', '3.0.4'
 gem 'bootstrap-will_paginate', '0.0.9'
+gem 'pg', '0.15.1'
 
 group :development, :test do 
-	gem 'sqlite3', '1.3.7'
+	# gem 'sqlite3', '1.3.7'
 	gem 'rspec-rails', '2.13.1'
 	# The following optional lines are part of the advanced setup.
-	# gem 'guard-rspec', '2.5.0'
-	# gem 'spork-rails', github: 'railstutorial/spork-rails'
-	# gem 'guard-spork', '1.5.0'
-	# gem 'childprocess', '0.3.6'
+	gem 'guard-rspec', '2.5.0'
+	gem 'spork-rails', github: 'railstutorial/spork-rails'
+	gem 'guard-spork', '1.5.0'
+	gem 'childprocess', '0.3.6'
 end
 
 group :test do 
