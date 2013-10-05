@@ -1,0 +1,29 @@
+// _footer.css.scss
+@import 'bootstrap/variables';
+
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid #eaeaea;
+  color: $grayLight;
+
+  a {
+    color: #555;
+    &:hover {
+    color: #222;
+    }
+  }
+
+  small {
+    float: left;
+  }
+
+  ul {
+    float: right;
+    list-style: none;
+    li {
+      float: left;
+      margin-left: 10px;
+    }
+  }
+}
