@@ -23,6 +23,11 @@ Things you may want to cover:
 
 * Database creation
 
+run:
+1) rake db:setup
+2) rake db:migrate
+
+
 * Database initialization
 
 * How to run the test suite
