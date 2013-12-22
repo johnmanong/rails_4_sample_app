@@ -59,6 +59,13 @@ describe "Static pages" do
   		visit '/static_pages/contact'
   		expect(page).to have_title("#{title_base} | Contact") #can also substring match
   	end
+
+    it "it should have content 'Contact'" do
+      visit '/static_pages/contact'
+      expect(page).to have_content('Contact')
+    end
+
+
   end
 
 end
