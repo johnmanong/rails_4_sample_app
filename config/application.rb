@@ -14,7 +14,8 @@ module SampleApp
   class Application < Rails::Application
 
     # needed by rails 4 for bootstrap compatability with asset pipeline
-    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+    #config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
