@@ -15,17 +15,6 @@ describe "Static pages" do
     it { should have_title(full_title('')) }
     it { should_not have_title(" | Home") }
 
-  	# # ensure title copy is correct
-  	# it "should have the content 'Sample App'" do 		# description
-  	# 	expect(page).to have_content('Sample App')		# requirement
-   #  end
-   #  it "should have base title" do 
-  	# 	expect(page).to have_title("#{title_base}") # will also do substring match
-  	# end
-
-   #  it "should not have a custom page title" do
-   #    expect(page).not_to have_title(" | Home")
-   #  end
   end
 
   # Help Page tests
@@ -47,14 +36,7 @@ describe "Static pages" do
 
     it { should have_content('About Us') }
     it { should have_title("#{title_base} | About") } # will also do substring match
-    
 
-  # 	it "should have valid tutorial link" do 
-		# tutorial_link = find(:css, "a:contains('Tutorial')")
-  # 		tutorial_link.click
-  # 		get page status, should be (200) or simply check
-  # 	end
-  	
   end
 
   #test for contact page (exercise)
