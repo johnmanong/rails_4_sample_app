@@ -15,6 +15,8 @@ describe User do
   it { should respond_to(:password) }                 # has_secture_password
   it { should respond_to(:password_confirmation) }    # has_secture_password
   it { should respond_to(:authenticate) }             # has_secture_password
+  it { should respond_to(:remember_token) }
+
 
   it { should be_valid }
 
@@ -116,5 +118,11 @@ describe User do
     it { should be_invalid }
   end
 
+  describe "remember_token" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
+    # same as above
+    # it { expect(@user.remember_token).not_to be_blank }
+  end
 
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "AuthenticationPages" do
   subject { page }
 
-  describe "signin page" do
+  describe "signin" do
     before { visit signin_path }
 
     let(:signin_btn)  { "Sign in" }
@@ -15,6 +15,11 @@ describe "AuthenticationPages" do
 
       it { should have_title("Sign in") }
       it { should have_selector('div.alert.alert-error', text: 'Invalid') }
+      
+      describe "after visiting another page" do
+        before { click_link "Home" }
+        it { should_not have_selector('div.alert.alert-error') }  
+      end
     end
 
     describe "with valid info" do
