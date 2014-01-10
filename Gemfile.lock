@@ -233,6 +233,7 @@ DEPENDENCIES
   jquery-rails (= 2.2.1)
   libnotify (= 0.8.0)
   pg (= 0.15.1)
+  pry
   rails (= 4.0.0.beta1)
   rspec-rails (= 2.13.1)
   sass-rails (= 4.0.0)

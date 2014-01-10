@@ -18,7 +18,7 @@ describe "AuthenticationPages" do
       
       describe "after visiting another page" do
         before { click_link "Home" }
-        it { should_not have_selector('div.alert.alert-error') }  
+        it { should_not have_error_message }  
       end
     end
 
@@ -30,15 +30,13 @@ describe "AuthenticationPages" do
       end
 
       it { should have_title(user.name) }
-      it { should have_link('Profile', href: user_path(user)) }
-      it { should have_link('Sign out', href: signout_path) }
-      it { should_not have_link('Sign in', href: signin_path) }
+      it { should show_profile_link }
+      it { should reflect_signed_in }
 
       describe "followed by sign out" do
         before { click_link "Sign out" }
 
-        it { should have_link('Sign in', href: signin_path) }
-        it { should_not have_link('Sign out', href: signout_path) }
+        it { should reflect_signed_out }
       end
     end
 

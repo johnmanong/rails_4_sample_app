@@ -8,8 +8,7 @@ describe "UserPages" do
     let(:user) { FactoryGirl.create(:user) }
     before { visit user_path(user) }
 
-    it { should have_content(user.name) }
-    it { should have_title(user.name) }    
+    it { should show_profile_page }    
   end
 
   describe 'signup page' do
@@ -17,8 +16,7 @@ describe "UserPages" do
 
     let(:submit) { "Create my account" }
 
-    it { should have_content('Sign up') }
-    it { should have_title(full_title('Sign up')) }
+    it { should show_signup_page}
 
     describe "with invalid info" do
       it "should not create a user" do
@@ -30,19 +28,16 @@ describe "UserPages" do
           click_button submit
         end
 
-        it { should have_title(full_title('Sign up')) }
-        it { should have_content('6 errors') }
-        it { should have_selector('.alert-error', text: 'There was a problem signing you up') }
+        it { should show_signup_page }
+        it { should have_this_many_errors(6) }
+        it { should have_error_message('There was a problem signing you up') }
       end
 
     end
 
     describe "with valid info" do
       before do
-        fill_in "Name",         with: "Example User"
-        fill_in "Email",        with: "user@example.com"
-        fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
+        fill_in_valid_sign_up_info
       end
       it "should create one user" do
         expect { click_button submit }.to change(User, :count).by(1)
@@ -52,9 +47,9 @@ describe "UserPages" do
         before { click_button submit }
         let(:user) { User.find_by(email: 'user@example.com') }
 
-        it { should have_title(user.name) }
-        it { should have_link("Sign out", href: signout_path) }
-        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+        it { should show_profile_page }
+        it { should reflect_signed_in }
+        it { should have_success_message('Welcome') }
       end
 
     end
