@@ -7,7 +7,7 @@ end
 RSpec::Matchers.define :show_profile_page do
   match do |page|
     # it { should have_content('Sign up') }
-    expect(page).to have_title(user.name)
+    expect(page).to have_title(user.reload.name)
   end
 end
 

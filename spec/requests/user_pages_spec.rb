@@ -57,7 +57,10 @@ describe "UserPages" do
 
   describe "edit" do
     let(:user) { FactoryGirl.create(:user) }
-    before { visit edit_user_path(user) }
+    before {
+      sign_in(user)
+      visit edit_user_path(user) 
+    }
     describe "page" do
       it { should show_edit_page }
       it { should have_title 'Edit user' }
@@ -72,6 +75,24 @@ describe "UserPages" do
 
       it { should have_title 'Edit user' }
       it { should have_content('error')}      
+    end
+
+    describe "valid info" do
+      let(:new_name) { "New Name" }
+      let(:new_email) { "new@example.com" }
+      before do
+        fill_in "Name",             with: new_name
+        fill_in "Email",            with: new_email
+        fill_in "Password",         with: user.password
+        fill_in "Confirm Password", with: user.password
+        click_button 'Save changes'
+      end
+
+      it { should show_profile_page }
+      it { should have_success_message }
+      it { should reflect_signed_in }
+      specify { expect(user.reload.name).to eq(new_name) }
+      specify { expect(user.reload.email).to eq(new_email) }
     end
 
   end
