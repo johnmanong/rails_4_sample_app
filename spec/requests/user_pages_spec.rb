@@ -16,7 +16,7 @@ describe "UserPages" do
 
     let(:submit) { "Create my account" }
 
-    it { should show_signup_page}
+    it { should show_signup_page }
 
     describe "with invalid info" do
       it "should not create a user" do
@@ -53,5 +53,26 @@ describe "UserPages" do
       end
 
     end
+  end
+
+  describe "edit" do
+    let(:user) { FactoryGirl.create(:user) }
+    before { visit edit_user_path(user) }
+    describe "page" do
+      it { should show_edit_page }
+      it { should have_title 'Edit user' }
+      it { should have_link 'change', href: 'http://gravatar.com/emails'}
+    end
+
+    describe "invalid info" do
+      before { click_button 'Save changes' }
+
+      it { should have_this_many_errors(2) }
+      it { should show_edit_page }
+
+      it { should have_title 'Edit user' }
+      it { should have_content('error')}      
+    end
+
   end
 end

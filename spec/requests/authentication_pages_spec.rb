@@ -26,12 +26,13 @@ describe "AuthenticationPages" do
       let(:user) { FactoryGirl.create(:user) }
 
       before do
-        valid_signin(user)
+        sign_in(user)
       end
 
       it { should have_title(user.name) }
       it { should show_profile_link }
       it { should reflect_signed_in }
+      it { should have_link('Settings', href: edit_user_path(user)) }
 
       describe "followed by sign out" do
         before { click_link "Sign out" }
