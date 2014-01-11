@@ -13,6 +13,7 @@ end
 
 RSpec::Matchers.define :show_signup_page do
   match do |page|
+    # it { should have_content(user.name) }
     expect(page).to have_title(full_title('Sign up'))
   end
 end
