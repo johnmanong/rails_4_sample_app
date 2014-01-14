@@ -7,6 +7,12 @@ module SessionsHelper
     @current_user = user
   end
 
+  # boolean method to check if current user
+  #
+  def current_user?(user)
+    user == current_user
+  end
+
   # def retrieving current_user value
   # memoization only useful if hit more than once per page
   # find_by is called at least once per page

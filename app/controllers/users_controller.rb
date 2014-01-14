@@ -1,5 +1,8 @@
 class UsersController < ApplicationController
-  
+  before_action :signed_in_user,  only: [:edit, :update]
+  before_action :correct_user,    only: [:edit, :update]
+
+  # POST /users
   def create
     @user = User.new(user_params)   # not final implementation
     if @user.save
@@ -12,20 +15,24 @@ class UsersController < ApplicationController
     end
   end
 
+  # GET /users/:id/edit
   def edit
-    @user = User.find(params[:id])
+    # @user = User.find(params[:id])    # provided in before action, correct_user
   end
 
+  # GET /users/new
   def new
     @user = User.new
   end
 
+  # GET /users/:id
   def show
     @user = User.find(params[:id])
   end
 
+  # PUT/PATCH /users/:id
   def update
-    @user = User.find(params[:id])
+    # @user = User.find(params[:id])     # provided in before action, correct_user
     if(@user.update_attributes(user_params))
       # success
       flash[:success] = "Profile successfully updated."
@@ -37,6 +44,9 @@ class UsersController < ApplicationController
     end
   end
 
+  # GET     /users        -> index
+  # DELETE  /users/:id    -> destroy
+
   private
 
     def user_params
@@ -45,6 +55,23 @@ class UsersController < ApplicationController
                     :email,
                     :password,
                     :password_confirmation)
+    end
+
+    # before filters
+    def correct_user
+      @user = User.find(params[:id])
+      redirect_to(root_url) unless current_user?(@user)
+    end
+
+    def signed_in_user
+      redirect_to signin_url, notice: "Please sign in." unless signed_in?
+
+      # equivalent implementation
+      #
+      # unless signed_in?
+      #   flash[:notice] = "Please sign in."    # does not work for :error, :success
+      #   redirect_to signin_url
+      # end
     end
 
 end
