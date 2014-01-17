@@ -59,6 +59,19 @@ describe "AuthenticationPages" do
           specify { expect(response).to redirect_to(signin_path) }
         end
       end
+
+      describe "when attempting to access a protected page" do
+        before do
+          visit edit_user_path(user)    # redirects to signin page
+          fill_in "Email",    with: user.email.upcase
+          fill_in "Password", with: user.password
+          click_button "Sign in"
+        end
+
+        describe "after signing in" do
+          it { should show_edit_page }
+        end
+      end
     end
 
     describe "as wrong user" do

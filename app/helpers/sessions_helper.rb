@@ -23,6 +23,15 @@ module SessionsHelper
     @current_user ||= User.find_by(remember_token: remember_token)
   end
 
+  # check session for a stored path to redirect to or use default
+  #
+  def redirect_back_or(default)
+    redirect_to(session[:return_to] || default)
+    session.delete(:return_to)
+  end
+
+  # signs in user
+  #
   def sign_in(user)
     remember_token = User.new_remember_token
     cookies.permanent[:remember_token] = remember_token       # same as 20 year cookie
@@ -40,8 +49,16 @@ module SessionsHelper
     self.current_user = nil
   end
 
+  # check if user is signed in, returning boolean
+  #
   def signed_in?
     !current_user.nil?
+  end
+
+  # stores a location in the session to potential redirect user (only for get request)
+  #
+  def store_location
+    session[:return_to] = request.url if request.get?
   end
 
 end
