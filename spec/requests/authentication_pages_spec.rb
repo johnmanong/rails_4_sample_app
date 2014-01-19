@@ -13,7 +13,7 @@ describe "AuthenticationPages" do
         click_button signin_btn
       end
 
-      it { should have_title("Sign in") }
+      it { should show_signin_page }
       it { should have_error_message('Invalid') }
       
       describe "after visiting another page" do
@@ -33,6 +33,7 @@ describe "AuthenticationPages" do
       it { should show_profile_link }
       it { should reflect_signed_in }
       it { should have_link('Settings', href: edit_user_path(user)) }
+      it { should have_link('Users',    href: users_path) }
 
       describe "followed by sign out" do
         before { click_link "Sign out" }
@@ -57,6 +58,11 @@ describe "AuthenticationPages" do
           before { patch user_path(user) }
 
           specify { expect(response).to redirect_to(signin_path) }
+        end
+
+        describe "visiting the user index page" do
+          before { visit users_path }
+          it { should show_signin_page }
         end
       end
 

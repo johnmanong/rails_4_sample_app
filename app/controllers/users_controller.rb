@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :signed_in_user,  only: [:edit, :update]
+  before_action :signed_in_user,  only: [:edit, :index, :update]
   before_action :correct_user,    only: [:edit, :update]
 
   # POST /users
@@ -18,6 +18,10 @@ class UsersController < ApplicationController
   # GET /users/:id/edit
   def edit
     # @user = User.find(params[:id])    # provided in before action, correct_user
+  end
+
+  def index
+    @users = User.all
   end
 
   # GET /users/new

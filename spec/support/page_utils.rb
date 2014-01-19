@@ -23,3 +23,9 @@ RSpec::Matchers.define :show_edit_page do
     expect(page).to have_selector('h1', text: 'Update your profile')
   end
 end
+
+RSpec::Matchers.define :show_signin_page do
+  match do |page|
+    expect(page).to have_title(full_title('Sign in'))
+  end
+end
