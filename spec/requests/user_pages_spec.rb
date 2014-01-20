@@ -4,20 +4,69 @@ describe "UserPages" do
   subject { page }
 
   describe "index page" do
+    let(:user) { FactoryGirl.create(:user) }
     before do
       sign_in FactoryGirl.create(:user)
-      FactoryGirl.create(:user, name: "Bob", email: "bob@example.com")
-      FactoryGirl.create(:user, name: "Ben", email: "ben@example.com")
       visit users_path
     end
 
     it { should have_content('All users')}
     it { should have_title(full_title('All users')) }
 
-    it "should list each user" do
-      User.all.each do |u|
-        expect(page).to have_selector('li', text: u.name)
+    describe "pagination" do
+      let(:first_page_users) { User.paginate(page: 1) }
+      before(:all) { 40.times { FactoryGirl.create(:user) } }
+      after(:all) { User.delete_all }
+
+      it { should have_selector("div.pagination") }
+
+      it "should list each user" do
+        first_page_users.each do |u|
+          expect(page).to have_selector('li', text: u.name)
+        end
       end
+
+      it "should not list users page first page" do
+        expect(first_page_users.length).to eq(30)   # 30 is default pagination value from gem
+      end
+    end
+
+    describe "delete links" do
+      it { should_not have_link('delete') }
+
+      describe "as admin user" do
+        let(:admin) { FactoryGirl.create(:admin) }
+        before do
+          sign_in admin
+          visit users_path
+        end
+
+        it { should have_link('delete', href: user_path(User.first)) }
+        it "should be able to delete a user" do
+          expect do
+            click_link('delete', match: :first)
+          end.to change(User, :count).by(-1)
+        end
+        it { should_not have_link('delete', href: users_path(admin)) }
+      end
+
+      describe "as non-admin user" do
+        let(:user) { FactoryGirl.create(:user) }
+        let(:non_admin) { FactoryGirl.create(:user) }
+
+        before do
+          sign_in non_admin, no_capybara: true
+
+          describe "submitting a DELETE request should fail" do
+            before { delete user_path(user) }
+            specify { expect(response).to redirect_to(root_url) }
+          end
+
+
+        end
+
+      end
+
     end
 
   end
