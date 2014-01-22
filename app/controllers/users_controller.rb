@@ -38,7 +38,7 @@ class UsersController < ApplicationController
   # GET     /users        -> index
   def index
     page = params[:page].blank? ? 1 : params[:page]
-    @users = User.paginate(page: page)
+    @users = User.paginate(page: page).order('id ASC')
   end
 
   # GET /users/new
