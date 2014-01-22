@@ -198,6 +198,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    terminal-notifier-guard (1.5.3)
     thor (0.18.1)
     thread_safe (0.1.0)
       atomic
@@ -243,6 +244,7 @@ DEPENDENCIES
   sdoc (= 0.3.20)
   selenium-webdriver (= 2.0.0)
   spork-rails!
+  terminal-notifier-guard
   turbolinks (= 1.1.1)
   uglifier (= 2.1.1)
   will_paginate (= 3.0.4)
