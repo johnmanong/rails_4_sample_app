@@ -15,6 +15,8 @@ describe "AuthenticationPages" do
 
       it { should show_signin_page }
       it { should have_error_message('Invalid') }
+      it { should_not show_profile_link }
+      it { should_not show_settings_link }
       
       describe "after visiting another page" do
         before { click_link "Home" }
@@ -31,6 +33,7 @@ describe "AuthenticationPages" do
 
       it { should have_title(user.name) }
       it { should show_profile_link }
+      it { should show_settings_link }
       it { should reflect_signed_in }
       it { should have_link('Settings', href: edit_user_path(user)) }
       it { should have_link('Users',    href: users_path) }
@@ -40,6 +43,7 @@ describe "AuthenticationPages" do
 
         it { should reflect_signed_out }
       end
+
     end
   end
 
@@ -75,9 +79,23 @@ describe "AuthenticationPages" do
         end
 
         describe "after signing in" do
+          it { should reflect_signed_in }
           it { should show_edit_page }
+
+          describe "when signing in again" do
+            before do
+              click_link 'Sign out'
+              sign_in user
+            end
+
+            it "should render default (profile) page" do
+              expect(page).to reflect_signed_in
+              expect(page).to show_profile_page
+            end
+          end
         end
       end
+
     end
 
     describe "as wrong user" do

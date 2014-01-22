@@ -1,6 +1,22 @@
 RSpec::Matchers.define :show_profile_link do
   match do |page|
-    expect(page).to have_link('Profile', href: user_path(user))
+    user ||= false
+    if user
+      expect(page).to have_link('Profile', href: user_path(user))
+    else
+      expect(page).to have_link('Profile')
+    end
+  end
+end
+
+RSpec::Matchers.define :show_settings_link do
+  match do |page|
+    user ||= false
+    if user
+      expect(page).to have_link('Settings', href: edit_user_path(user))
+    else
+      expect(page).to have_link('Settings')
+    end
   end
 end
 

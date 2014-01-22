@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
-  before_action :signed_in_user,  only: [:edit, :index, :update, :destroy]
-  before_action :correct_user,    only: [:edit, :update]
-  before_action :admin_user,      only: [:destroy]
+  before_action :signed_in_user,    only: [:edit, :index, :update, :destroy]
+  before_action :correct_user,      only: [:edit, :update]
+  before_action :admin_user,        only: [:destroy]
+  before_action :no_user_signed_in, only: [:create, :new]
 
   # POST /users
   def create
@@ -18,8 +19,14 @@ class UsersController < ApplicationController
 
   # DELETE /users/:id
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User #{params[:id]} deleted"
+    @user = User.find(params[:id])
+    if current_user?(@user)
+      flash.now[:error] = "Cannot delete yourself, sorry bout it."
+    else
+      @user.destroy
+      flash[:success] = "User #{params[:id]} deleted"
+    end
+
     redirect_to users_url
   end
 
@@ -27,7 +34,8 @@ class UsersController < ApplicationController
   def edit
     # @user = User.find(params[:id])    # provided in before action, correct_user
   end
-
+  
+  # GET     /users        -> index
   def index
     page = params[:page].blank? ? 1 : params[:page]
     @users = User.paginate(page: page)
@@ -56,9 +64,6 @@ class UsersController < ApplicationController
       render 'edit'
     end
   end
-
-  # GET     /users        -> index
-  # DELETE  /users/:id    -> destroy
 
   private
 
@@ -95,4 +100,9 @@ class UsersController < ApplicationController
       # end
     end
 
+    def no_user_signed_in
+      if signed_in?
+        redirect_to root_url
+      end
+    end
 end

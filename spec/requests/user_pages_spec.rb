@@ -42,12 +42,26 @@ describe "UserPages" do
         end
 
         it { should have_link('delete', href: user_path(User.first)) }
+        it { should_not have_link('delete', href: users_path(admin)) }
+
         it "should be able to delete a user" do
           expect do
             click_link('delete', match: :first)
           end.to change(User, :count).by(-1)
         end
-        it { should_not have_link('delete', href: users_path(admin)) }
+
+        describe "delete action without link" do
+          before do
+            sign_in admin, no_capybara: true
+          end
+
+          it "should not be able to delete themselves" do
+            expect do
+              delete user_path(admin)
+            end.not_to change(User, :count).by(-1)
+          end
+
+        end
       end
 
       describe "as non-admin user" do
@@ -56,19 +70,14 @@ describe "UserPages" do
 
         before do
           sign_in non_admin, no_capybara: true
-
-          describe "submitting a DELETE request should fail" do
-            before { delete user_path(user) }
-            specify { expect(response).to redirect_to(root_url) }
-          end
-
-
         end
 
+        describe "submitting a DELETE request should fail" do
+          before { delete user_path(user) }
+          specify { expect(response).to redirect_to(root_url) }
+        end
       end
-
     end
-
   end
 
   describe "profile page" do
@@ -121,12 +130,31 @@ describe "UserPages" do
       end
 
     end
+
+    describe "when a user is signed in" do
+      before { sign_in FactoryGirl.create(:user), no_capybara: true}
+
+      describe "submitting GET to signup path should fail" do
+        before { get signup_path }
+        specify { expect(response).to redirect_to(root_url) }
+      end
+
+      describe "submitting POST to signup path should fail" do
+        let(:params) { { user: { name:      'some name',
+                                 email:     'email@example.com',
+                                 password:  'foobar',
+                                 password_confirmation: 'foobar' } } }
+        before { post users_path, params }
+        specify { expect(response).to redirect_to(root_url) }
+      end
+    end
+
   end
 
   describe "edit" do
     let(:user) { FactoryGirl.create(:user) }
     before {
-      sign_in(user)
+      sign_in user
       visit edit_user_path(user) 
     }
     describe "page" do
