@@ -5,22 +5,63 @@ describe User do
     @user = User.new(name: "The Dude", email: "dude@abides.net", password: "foobar", password_confirmation: "foobar")
   end
 
-  subject {
-    @user
-  }
+  subject { @user }
 
+  # basic
   it { should respond_to(:name) }
   it { should respond_to(:email) }
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }                 # has_secture_password
   it { should respond_to(:password_confirmation) }    # has_secture_password
+  
+  # session
   it { should respond_to(:authenticate) }             # has_secture_password
   it { should respond_to(:remember_token) }
+
+  # roles
   it { should respond_to(:admin) }
 
+  # micropost association
+  it { should respond_to(:microposts) }
 
   it { should be_valid }
   it { should_not be_admin }
+
+  describe 'micropost association' do
+    before { @user.save! }
+    
+    let!(:older_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
+    end
+    let!(:newer_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
+    end
+
+    it "should have the microposts in reverse chronological order" do
+      expect(@user.microposts.to_a).to eq [newer_micropost, older_micropost]
+    end
+
+    it "should destroy associated microposts" do
+      # makes a local copy
+      microposts = @user.microposts.to_a
+      # destroy user, destroy posts
+      @user.destroy
+      # check needed to ensure local copy persists
+      expect(microposts).not_to be_empty
+      microposts.each do |micropost|
+        # test if microposts are in db
+        expect(Micropost.where(id: micropost.id)).to be_empty
+
+        # where prefered over find(), since where() returns an empty obj
+        # and find() throws an exception. 
+        # An equivalent implementation with find():
+        #
+        expect do
+           Micropost.find(micropost)
+        end.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
 
   describe 'when user is admin' do
     before do
