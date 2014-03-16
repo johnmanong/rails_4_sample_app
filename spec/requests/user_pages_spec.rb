@@ -83,9 +83,28 @@ describe "UserPages" do
   describe "profile page" do
     # create user model object
     let(:user) { FactoryGirl.create(:user) }
+    # create some associated microposts 
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: 'foo') }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: 'bar') }
+
     before { visit user_path(user) }
 
-    it { should show_profile_page }    
+    it { should show_profile_page }
+
+    describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
+    end
+
+    describe "no microposts" do
+      before do
+        user.microposts.delete_all
+        visit user_path(user)
+      end
+
+      it { should have_content("No Microposts yet")}
+    end
   end
 
   describe 'signup page' do

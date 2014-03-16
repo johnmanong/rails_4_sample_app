@@ -37,8 +37,7 @@ class UsersController < ApplicationController
   
   # GET     /users        -> index
   def index
-    page = params[:page].blank? ? 1 : params[:page]
-    @users = User.paginate(page: page).order('id ASC')
+    @users = User.paginate(page: page_with_default).order('id ASC')
   end
 
   # GET /users/new
@@ -49,6 +48,7 @@ class UsersController < ApplicationController
   # GET /users/:id
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: page_with_default)
   end
 
   # PUT/PATCH /users/:id
@@ -66,6 +66,9 @@ class UsersController < ApplicationController
   end
 
   private
+    def page_with_default
+      params[:page].blank? ? 1 : params[:page]
+    end
 
     def user_params
       params.require(:user)
