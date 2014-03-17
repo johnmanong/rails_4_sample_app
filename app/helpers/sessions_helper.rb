@@ -39,6 +39,28 @@ module SessionsHelper
     self.current_user = user
   end
 
+  # check if user is signed in, returning boolean
+  #
+  def signed_in?
+    !current_user.nil?
+  end
+
+  # helper for verifying if user is signed in
+  #
+  def signed_in_user
+    unless signed_in?
+      store_location
+      redirect_to signin_url, notice: "Please sign in."
+    end
+
+    # equivalent implementation
+    #
+    # unless signed_in?
+    #   flash[:notice] = "Please sign in."    # does not work for :error, :success
+    #   redirect_to signin_url
+    # end
+  end
+
   # Setting a new cookie for the current user in the db will invalidate cookie at signout
   # this is to prevent a stolen cookie to remain valid. Setting current_user to nil is no
   # required as it comes for free with rediect, but it is not good to rely on this
@@ -47,12 +69,6 @@ module SessionsHelper
     current_user.update_attribute(:remember_token, User.encrypt(User.new_remember_token))
     cookies.delete(:remember_token)
     self.current_user = nil
-  end
-
-  # check if user is signed in, returning boolean
-  #
-  def signed_in?
-    !current_user.nil?
   end
 
   # stores a location in the session to potential redirect user (only for get request)

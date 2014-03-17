@@ -51,6 +51,20 @@ describe "AuthenticationPages" do
     describe "for non-signed in users" do
       let(:user) { FactoryGirl.create(:user) }
       
+      describe "in the Microposts controller" do
+        describe "submitting to the create action" do
+          # note plural in path
+          before { post microposts_path }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+
+        describe "submitting to the destory action" do
+          # note singular in path
+          before { delete micropost_path(FactoryGirl.create(:micropost)) }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+      end
+
       describe "in Users controller" do
         describe "visiting the edit page" do
           before { visit edit_user_path(user) }

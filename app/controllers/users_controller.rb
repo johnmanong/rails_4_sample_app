@@ -89,20 +89,6 @@ class UsersController < ApplicationController
       redirect_to(root_url) unless current_user?(@user)
     end
 
-    def signed_in_user
-      unless signed_in?
-        store_location
-        redirect_to signin_url, notice: "Please sign in."
-      end
-
-      # equivalent implementation
-      #
-      # unless signed_in?
-      #   flash[:notice] = "Please sign in."    # does not work for :error, :success
-      #   redirect_to signin_url
-      # end
-    end
-
     def no_user_signed_in
       if signed_in?
         redirect_to root_url
