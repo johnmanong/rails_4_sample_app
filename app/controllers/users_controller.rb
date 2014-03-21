@@ -66,10 +66,6 @@ class UsersController < ApplicationController
   end
 
   private
-    def page_with_default
-      params[:page].blank? ? 1 : params[:page]
-    end
-
     def user_params
       params.require(:user)
             .permit(:name, 
