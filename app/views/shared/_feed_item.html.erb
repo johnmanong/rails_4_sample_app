@@ -5,4 +5,5 @@
   </span>
   <span class="content"><%= feed_item.content %></span>
   <%= render partial: 'shared/inline_timestamp', locals: { post: feed_item } %>
+  <%= render partial: 'shared/delete_micropost_link', locals: { post: feed_item } %>
 </li>
