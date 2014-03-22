@@ -3,7 +3,7 @@
   <span class="user">
     <%= link_to feed_item.user.name, feed_item.user %>
   </span>
-  <span class="content"><%= feed_item.content %></span>
+  <span class="content"><%= wrap(feed_item.content) %></span>
   <%= render partial: 'shared/inline_timestamp', locals: { post: feed_item } %>
   <%= render partial: 'shared/delete_micropost_link', locals: { post: feed_item } %>
 </li>

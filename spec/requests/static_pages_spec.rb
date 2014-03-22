@@ -35,6 +35,31 @@ describe "Static pages" do
           expect(page).to have_selector("li##{item.id}", text: item.content)
         end
       end
+
+      it "should show correct text than one microposts" do
+        expect(page).to have_content("2 microposts")
+      end
+
+      it "should handle 1 micropost" do
+        user.feed.first.delete
+        visit root_path
+        expect(page).to have_content("1 micropost")
+      end
+
+      it "should show special message for no posts" do
+        user.feed.delete_all
+        visit root_path
+        expect(page).to have_content("0 microposts")
+      end
+
+      it "should show correct number of microposts" do
+        40.times do 
+          FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+        end
+        visit root_url
+
+        expect(page.all("ol.microposts li").count).to eq(30)
+      end
     end
 
   end

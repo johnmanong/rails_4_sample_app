@@ -95,6 +95,7 @@ describe "UserPages" do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
+      it { should_not have_selector('a', text: 'delete')}
     end
 
     describe "no microposts" do
@@ -104,6 +105,26 @@ describe "UserPages" do
       end
 
       it { should have_content("No Microposts yet")}
+    end
+
+    describe "signed in user" do
+      before { sign_in user }
+
+      describe "visit own profile" do
+        before { visit user_path(user) }
+
+        it { should have_selector("ol.microposts li a", text: "delete") }
+      end
+
+      describe "visit anothers profile" do
+        let(:another_user) { FactoryGirl.create(:user) }
+        let!(:m3) { FactoryGirl.create(:micropost, user: another_user, content: 'baz') }
+        let!(:m4) { FactoryGirl.create(:micropost, user: another_user, content: 'raz') }
+
+        before { visit user_path(another_user) }
+
+        it { should_not have_selector("ol.microposts li a", text: "delete") }
+      end
     end
   end
 
