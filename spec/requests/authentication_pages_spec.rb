@@ -82,6 +82,16 @@ describe "AuthenticationPages" do
           before { visit users_path }
           it { should show_signin_page }
         end
+
+        describe "visiting the following page" do
+          before { visit following_user_path(user) }
+          it { should show_signin_page }
+        end
+
+        describe "visiting the follower page" do
+          before { visit followers_user_path(user) }
+          it { should show_signin_page }
+        end
       end
 
       describe "when attempting to access a protected page" do

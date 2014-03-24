@@ -1,8 +1,24 @@
 class UsersController < ApplicationController
-  before_action :signed_in_user,    only: [:edit, :index, :update, :destroy]
+  before_action :signed_in_user,    only: [:edit, :index, :update, :destroy, :following, :followers]
   before_action :correct_user,      only: [:edit, :update]
   before_action :admin_user,        only: [:destroy]
   before_action :no_user_signed_in, only: [:create, :new]
+
+  # get users which user is following
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: page_with_default)
+    render 'show_follow'
+  end
+
+  # get users which follow user
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: page_with_default)
+    render 'show_follow'
+  end
 
   # POST /users
   def create
