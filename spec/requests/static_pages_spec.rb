@@ -42,8 +42,8 @@ describe "Static pages" do
           other_user.follow!(user)
           visit root_path
         end
-        it { should have_link("0 following", href: following_users_path(user)) }
-        it { should have_link("1 followers", href: followers_users_path(user)) }
+        it { should have_link("0 following", href: following_user_path(user)) }
+        it { should have_link("1 followers", href: followers_user_path(user)) }
       end
 
       it "should show correct text than one microposts" do

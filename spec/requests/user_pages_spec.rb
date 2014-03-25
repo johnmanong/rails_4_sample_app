@@ -88,7 +88,7 @@ describe "UserPages" do
     describe "followed users" do
       before do
         sign_in user
-        visit_following_user_path(user)
+        visit following_user_path(user)
       end
 
       it { should have_title(full_title('Following')) }
@@ -118,6 +118,59 @@ describe "UserPages" do
     before { visit user_path(user) }
 
     it { should show_profile_page }
+
+    describe "following/unfollowing buttons" do
+      let(:other_user) { FactoryGirl.create(:user) }
+      before { sign_in user }
+
+      describe "following a user" do
+        before { visit user_path(other_user) }
+
+        it "should increment user's following count by one" do
+          expect do
+            click_button "Follow"
+          end.to change(user.followed_users, :count).by(1)
+        end
+
+        it "should increment other user's followers count by one" do
+          expect do
+            click_button "Follow"
+          end.to change(other_user.followers, :count).by(1)
+        end
+
+        describe "toggling button" do
+          before { click_button "Follow" }
+          it { should have_xpath("//input[@value='Unfollow']") }
+        end
+      end
+
+      describe "unfollowing a user" do
+        before do
+          visit user_path(other_user)
+          click_button "Follow"
+        end
+
+        it "should decrement user's following count by one" do
+          expect do
+            click_button 'Unfollow'
+          end.to change(user.followed_users, :count).by(-1)
+        end
+
+        it "should decrement other user's followers count by one" do
+          expect do
+            click_button 'Unfollow'
+          end.to change(other_user.followers, :count).by(-1)
+        end
+
+
+        describe "toggling button" do
+          before { click_button "Unfollow" }
+          it { should have_xpath("//input[@value='Follow']") }
+        end
+
+      end
+
+    end
 
     describe "microposts" do
       it { should have_content(m1.content) }
