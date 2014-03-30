@@ -62,6 +62,25 @@ describe User do
       its(:followed_users) { should_not include(other_user) }
     end
 
+    describe "associated relationships" do
+      it "should destory associated relationships" do
+        user_relationships = @user.relationships.to_a
+        @user.destroy
+        expect(user_relationships).not_to be_empty;
+        user_relationships.each do |relationship|
+          expect(Relationship.where(id:relationship.id)).to be_empty
+        end
+      end
+
+      it "should destory associated relationships" do
+        user_relationships = other_user.reverse_relationships.to_a
+        other_user.destroy
+        expect(user_relationships).not_to be_empty
+        user_relationships.each do |relationship|
+          expect(Relationship.where(id: relationship.id)).to be_empty
+        end
+      end
+    end
   end
 
   describe 'micropost association' do
