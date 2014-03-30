@@ -119,6 +119,19 @@ describe "UserPages" do
 
     it { should show_profile_page }
 
+    describe "following/followers stats" do
+      let(:other_user) { FactoryGirl.create(:user) }
+        before  do
+          other_user.follow!(user)
+          visit user_path(other_user)
+        end
+
+      it { should have_link("1 following", href: following_user_path(other_user)) }
+      it { should have_link("0 followers", href: followers_user_path(other_user)) }
+    end
+    
+
+
     describe "following/unfollowing buttons" do
       let(:other_user) { FactoryGirl.create(:user) }
       before { sign_in user }
